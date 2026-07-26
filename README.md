@@ -15,8 +15,9 @@ with one-click rollback of anything that slips through. 100% local. No cloud. No
 
 <em>Track changes was built to show edits. CAI Guard was built to <strong>govern</strong> them.</em>
 
-<!-- Add a screen recording here before launch — this single asset drives the most stars. -->
-<!-- ![CAI Guard demo](docs/demo.gif) -->
+![CAI Guard catching an AI silently weakening a contract](docs/demo.gif)
+
+*An AI edits a contract — softening a `MUST` to `may`, halving a `$2,000,000` cap, slipping in an "except…" — and CAI Guard flags each one as **control-weakened** / **semantic** for your approval. <!--VIDEO-->*
 
 </div>
 
