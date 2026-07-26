@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.pytest_cache/
+
+# Virtual envs / build
+.venv/
+venv/
+env/
+.buildenv/
+build/
+dist/
+*.spec.bak
+
+# PyInstaller / Inno output
+packaging/Output/
+*.exe
+
+# CAI Guard runtime data (never commit a user's locks/vaults/settings)
+.caiguard/
+*.cai.json
+vault/
+enrolled.json
+settings.json
+vocab.json
+lexicon.json
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Scratch
+_smoke*.py
+*.log

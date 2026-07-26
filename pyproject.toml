@@ -1,0 +1,41 @@
+[project]
+name = "caiguard"
+version = "0.1.0"
+description = "A local change-firewall for your documents: lock a baseline, and every edit is classified (cosmetic/structural/semantic/control-weakened) and held for your approval. Deterministic, offline, MIT."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Brandon Junkin" }]
+keywords = ["docx", "word", "document-governance", "change-tracking", "contract",
+            "compliance", "redline", "diff", "local-first", "privacy", "integrity"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Legal Industry",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Office/Business",
+    "Topic :: Text Processing",
+]
+dependencies = ["python-docx>=1.1.0"]
+
+[project.optional-dependencies]
+app = ["watchdog>=3.0.0", "flask>=3.0.0", "pywebview>=5.0", "pystray>=0.19.5", "Pillow>=10.0.0"]
+
+[project.urls]
+Homepage = "https://github.com/<your-username>/cai-guard"
+Repository = "https://github.com/<your-username>/cai-guard"
+Issues = "https://github.com/<your-username>/cai-guard/issues"
+Changelog = "https://github.com/<your-username>/cai-guard/blob/main/CHANGELOG.md"
+
+[project.scripts]
+caiguard = "caiguard.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["caiguard"]

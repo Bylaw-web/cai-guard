@@ -1,0 +1,28 @@
+name: tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # The deterministic engine + roundtrip tests only need python-docx
+      # (the GUI/app layer isn't exercised in CI).
+      - name: Install core dependency
+        run: python -m pip install --upgrade pip python-docx
+      - name: Engine tests
+        run: python tests/test_engine.py
+      - name: Roundtrip test
+        run: python tests/test_roundtrip.py
+        env:
+          PYTHONPATH: .

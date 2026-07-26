@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CAI Guard</title>
+<style>
+:root{--ink:#0f172a;--muted:#64748b;--line:#e5e9f0;--bg:#f7f9fc;--brand:#0ea5e9;--emer:#10b981;--amber:#f59e0b;--red:#ef4444}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;flex-direction:column;overflow:hidden}
+button{font-family:inherit;font-weight:600;font-size:12.5px;border-radius:7px;padding:6px 12px;cursor:pointer;border:1.5px solid transparent}
+.primary{background:var(--brand);color:#fff}.emer{background:var(--emer);color:#fff}.ghost{background:#fff;border-color:var(--line)}.danger{background:#fff;border-color:#fecaca;color:#dc2626}
+button:disabled{opacity:.4;cursor:default}
+.top{background:#0b1220;color:#fff;padding:9px 16px;display:flex;align-items:center;gap:11px}
+.top h1{font-size:14px;margin:0}.watch{margin-left:12px;font-size:11.5px;color:#cbd5e1;background:#0f1a2e;padding:4px 10px;border-radius:99px;display:flex;gap:7px;align-items:center}
+.live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.top .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+.stats{background:#fff;border-bottom:1px solid var(--line);padding:7px 16px;display:flex;gap:22px;font-size:12px}
+.stats b{font-size:14px}.stats span{color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.4px;display:block}
+.main{flex:1;display:flex;overflow:hidden}
+.doc{flex:1;overflow:auto;padding:20px 24px}
+.paper{background:#fff;max-width:760px;margin:0 auto;border:1px solid var(--line);border-radius:10px;padding:26px 34px}
+.paper h2{font-size:19px;margin:0 0 14px}
+.sec{border-left:3px solid #cbd5e1;padding:5px 10px 8px;margin:0 0 11px;border-radius:0 8px 8px 0;background:#fafcff}
+.sec.changed{border-left-color:var(--amber);background:#fffdf5}.sec.changed.weak{border-left-color:var(--red);background:#fef6f6}.sec.changed.structural{border-left-color:var(--brand);background:#f5faff}
+.hl{font-size:10px;font-family:ui-monospace,Consolas,monospace;color:#94a3b8;margin-bottom:3px}
+.hl b{color:#64748b}.hl .c{color:#b45309;font-family:inherit;font-weight:700}
+.sec.hd .body{font-weight:800;font-size:15px}
+.body{font-size:13.5px;line-height:1.6;outline:none;border-radius:4px;padding:2px 4px}
+.body:focus{background:#fffdf3;box-shadow:0 0 0 2px #fde68a inset}
+.push{margin-top:5px;display:none}.sec.dirty .push{display:inline-block}
+.rev{width:410px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.rev-h{padding:12px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+.pill{font-size:11px;font-weight:700;background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 9px;border-radius:99px}
+.rev-b{flex:1;overflow:auto;padding:12px 14px}
+.chg{border:1px solid var(--line);border-radius:9px;padding:11px;margin-bottom:10px}
+.chg .r1{display:flex;gap:8px;align-items:center;margin-bottom:5px}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase}
+.b-semantic{background:#fffbeb;color:#b45309}.b-structural{background:#eff6ff;color:#1d4ed8}.b-cosmetic{background:#f1f5f9;color:#475569}.b-control-weakened{background:#fef2f2;color:#b91c1c}
+.who{margin-left:auto;font-size:10px;color:var(--muted)}
+.who .p{background:#e0f2fe;color:#0369a1;padding:1px 7px;border-radius:99px;font-weight:700}.who .w{background:#eff6ff;color:#1d4ed8;padding:1px 7px;border-radius:99px;font-weight:700}
+.diff{font-size:11px;font-family:ui-monospace,monospace;background:#fbfdff;border:1px solid #eef2f7;border-radius:6px;padding:6px 8px;margin:5px 0;line-height:1.4}
+.del{color:#b91c1c}.add{color:#047857}.tok{font-size:11px;margin:3px 0}.tok b{color:#92400e}
+.chg .btns{display:flex;gap:7px;margin-top:8px}.chg .btns button{flex:1;padding:6px}
+.empty{color:#94a3b8;font-size:13px;text-align:center;padding:36px 16px;line-height:1.5}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0b1220;color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;opacity:0;transition:.3s}.toast.on{opacity:1}
+</style></head><body>
+<div class="top"><svg width="22" height="22" viewBox="0 0 48 48"><path d="M24 3l16 6v11c0 10-7 17-16 21C15 37 8 30 8 20V9l16-6z" fill="#0ea5e9"/><text x="24" y="30" font-size="14" font-weight="700" fill="#fff" text-anchor="middle">C</text></svg>
+<h1>CAI Guard</h1><div class="watch"><span class="live"></span> Watching <b id="dn" style="color:#e2e8f0;margin:0 3px"></b> — edit here or in Word</div>
+<div class="r"><button class="ghost" onclick="load()">↻ Rescan</button></div></div>
+<div class="stats"><div><b id="s-sec">—</b><span>sections</span></div><div><b id="s-ver">—</b><span>version</span></div><div><b id="s-pend">0</b><span>pending</span></div></div>
+<div class="main"><div class="doc"><div class="paper"><h2 id="docttl">Document</h2><div id="secs"></div></div></div>
+<div class="rev"><div class="rev-h">Changes <span class="pill" id="pp">0 pending</span></div><div class="rev-b" id="revb"></div></div></div>
+<div class="toast" id="toast"></div>
+<script>
+let ST={sections:[],pending:[]};
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+async function load(){ST=await (await fetch('/api/state')).json();render();}
+function render(){
+  document.getElementById('dn').textContent=ST.name;document.getElementById('docttl').textContent=ST.name;
+  document.getElementById('s-sec').textContent=ST.sections.length;document.getElementById('s-ver').textContent='v'+ST.version;
+  document.getElementById('s-pend').textContent=ST.pending.length;document.getElementById('pp').textContent=ST.pending.length+' pending';
+  document.getElementById('secs').innerHTML=ST.sections.map(s=>{
+    const cl=s.level&&s.level!=='none'?('changed '+(s.level==='control-weakened'?'weak':s.level==='structural'?'structural':'')):'';
+    return `<div class="sec ${cl} ${s.heading?'hd':''}" data-id="${s.id}">
+      <div class="hl">§ ${s.para_index} · structure <b>${s.sh}</b> · semantic <b>${s.mh}</b>${s.level&&s.level!=='none'?' · <span class="c">● '+s.level+'</span>':''}</div>
+      <div class="body" contenteditable spellcheck="false" oninput="dirty('${s.id}')">${esc(s.text)}</div>
+      <button class="push primary" onclick="push('${s.id}')">↑ Push to Word</button></div>`;}).join('');
+  const V={semantic:'semantic',structural:'structural',cosmetic:'cosmetic','control-weakened':'control-weakened'};
+  document.getElementById('revb').innerHTML=ST.pending.length?ST.pending.map(p=>{
+    let d=(p.diffs&&p.diffs.length)?p.diffs.map(x=>`<div class="tok"><b>${x.label}:</b> <span class="del">${esc(x.old)}</span> → <span class="add">${esc(x.new)}</span></div>`).join(''):`<div class="diff"><span class="del">– ${esc((p.base||'').slice(0,100))}</span><br><span class="add">+ ${esc((p.cur||'').slice(0,100))}</span></div>`;
+    return `<div class="chg"><div class="r1"><b>§ ${p.para_index}</b><span class="badge b-${p.level}">${p.level}</span><span class="who">${p.actor==='program'?'<span class="p">program</span>':'<span class="w">Word</span>'}</span></div>${d}<div class="btns"><button class="emer" onclick="act('approve','${p.id}')">Approve</button><button class="danger" onclick="act('reject','${p.id}')">Reject</button></div></div>`;
+  }).join(''):'<div class="empty">✓ No pending changes.<br>The document matches its approved baseline.</div>';
+}
+function dirty(id){const el=document.querySelector(`.sec[data-id="${id}"]`);el.classList.add('dirty');}
+async function push(id){const el=document.querySelector(`.sec[data-id="${id}"]`);const text=el.querySelector('.body').textContent;
+  await fetch('/api/edit',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id,text})});
+  toast('↑ Pushed into the Word document — pending review.');await load();}
+async function act(kind,id){await fetch('/api/'+kind,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})});
+  toast(kind==='approve'?'Approved — new baseline set.':'Rejected — document restored.');await load();}
+let tT;function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2800);}
+load();setInterval(load,4000);
+</script></body></html>

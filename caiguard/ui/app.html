@@ -1,0 +1,292 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>CAI Guard</title>
+<style>
+:root{--ink:#0f172a;--muted:#64748b;--line:#e5e9f0;--bg:#f7f9fc;--brand:#0ea5e9;--emer:#10b981;--amber:#f59e0b;--red:#ef4444}
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink);height:100vh;display:flex;overflow:hidden}
+button{font-family:inherit;font-weight:600;font-size:12.5px;border-radius:7px;padding:7px 12px;cursor:pointer;border:1.5px solid transparent}
+.primary{background:var(--brand);color:#fff}.emer{background:var(--emer);color:#fff}.ghost{background:#fff;border-color:var(--line)}.danger{background:#fff;border-color:#fecaca;color:#dc2626}
+button:disabled{opacity:.45;cursor:default}
+.side{width:250px;background:#0b1220;color:#cbd5e1;display:flex;flex-direction:column;flex-shrink:0}
+.brand{display:flex;align-items:center;gap:10px;padding:16px 16px 12px}.brand h1{font-size:15px;margin:0;color:#fff}.brand small{font-size:10px;color:#64748b}
+.addbtn{margin:4px 12px 10px;padding:9px;background:var(--brand);color:#fff;border-radius:8px;text-align:center;cursor:pointer;font-weight:700;font-size:13px}
+.dgrp{font-size:10px;font-weight:700;color:#5b6b82;letter-spacing:.5px;padding:8px 8px 4px}
+.dlist{flex:1;overflow:auto;padding:0 8px}
+.ditem{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:8px;cursor:pointer;font-size:12.5px;color:#cbd5e1}
+.ditem:hover{background:#0f1a2e}.ditem.on{background:#0f1a2e;color:#fff}
+.ditem .fi{width:26px;height:26px;border-radius:6px;background:#2b579a;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.ditem .meta{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.ditem .b{font-size:10px;background:#fef3c7;color:#92400e;border-radius:99px;padding:1px 6px;font-weight:700}
+.foot{padding:10px 12px;border-top:1px solid #14203a;display:flex;align-items:center;gap:9px;font-size:12px;cursor:pointer;color:#94a3b8}.foot:hover{color:#fff}
+.live{width:8px;height:8px;border-radius:50%;background:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.25)}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:11px 18px;display:flex;align-items:center;gap:12px}
+.top h2{font-size:15px;margin:0}.top .w{font-size:11.5px;color:var(--muted);display:flex;gap:6px;align-items:center}.top .r{margin-left:auto;display:flex;gap:8px}
+.body{flex:1;display:flex;overflow:hidden}
+.doc{flex:1;overflow:auto;padding:20px 24px}
+.paper{background:#fff;max-width:730px;margin:0 auto;border:1px solid var(--line);border-radius:10px;padding:24px 32px}
+.grp{margin:0 0 16px}
+.grph{display:flex;align-items:center;gap:10px;font-size:14px;font-weight:800;color:#1e293b;padding-bottom:5px;border-bottom:1px solid #eef2f7;margin-bottom:8px}
+.grph .gh{margin-left:auto;font-size:10px;font-family:ui-monospace,Consolas,monospace;color:#94a3b8;font-weight:400}.grph .gh b{color:#64748b}
+.grph .rtag{font-size:9.5px;font-weight:800;background:#eef2ff;color:#4338ca;padding:1px 7px;border-radius:99px;text-transform:uppercase}
+.grph .cd{width:8px;height:8px;border-radius:50%;background:var(--amber)}
+.sec{border-left:3px solid transparent;padding:2px 8px;margin:0 0 4px;border-radius:0 6px 6px 0;position:relative}
+.sec.changed{border-left-color:var(--amber);background:#fffdf5}.sec.weak{border-left-color:var(--red);background:#fef6f6}.sec.structural{border-left-color:var(--brand);background:#f5faff}
+.body2{font-size:13.5px;line-height:1.6;outline:none;border-radius:4px;padding:2px 4px}.body2:focus{background:#fffdf3;box-shadow:0 0 0 2px #fde68a inset}
+.body2.hd{font-weight:800}
+.lvltag{font-size:9px;font-weight:800;color:#b45309;text-transform:uppercase;margin-left:4px}
+.push{margin-top:4px;display:none;font-size:11px;padding:4px 9px}.sec.dirty .push{display:inline-block}
+.rev{width:400px;background:#fff;border-left:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.rev-h{padding:12px 15px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px;display:flex;gap:8px;align-items:center}
+.pill{font-size:11px;font-weight:700;background:#fffbeb;color:#b45309;border:1px solid #fde68a;padding:2px 9px;border-radius:99px}
+.rev-b{flex:1;overflow:auto;padding:12px 14px}
+.chg{border:1px solid var(--line);border-radius:9px;padding:11px;margin-bottom:10px}
+.chg .r1{display:flex;gap:8px;align-items:center;margin-bottom:5px}
+.badge{font-size:9.5px;font-weight:800;padding:2px 8px;border-radius:99px;text-transform:uppercase}
+.b-semantic{background:#fffbeb;color:#b45309}.b-structural{background:#eff6ff;color:#1d4ed8}.b-cosmetic{background:#f1f5f9;color:#475569}.b-control-weakened{background:#fef2f2;color:#b91c1c}
+.who{margin-left:auto;font-size:10px}.who .p{background:#e0f2fe;color:#0369a1;padding:1px 7px;border-radius:99px;font-weight:700}.who .wd{background:#eff6ff;color:#1d4ed8;padding:1px 7px;border-radius:99px;font-weight:700}
+.tok{font-size:11px;margin:3px 0}.tok b{color:#92400e}.del{color:#b91c1c}.add{color:#047857}
+.diff{font-size:11px;font-family:ui-monospace,monospace;background:#fbfdff;border:1px solid #eef2f7;border-radius:6px;padding:6px 8px;margin:5px 0}
+.adv{font-size:11px;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:5px 8px;margin:5px 0}
+.chg .btns{display:flex;gap:7px;margin-top:8px}.chg .btns button{flex:1;padding:6px}
+.empty{color:#94a3b8;font-size:13px;text-align:center;padding:60px 20px;line-height:1.6}
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.5);display:none;align-items:center;justify-content:center;z-index:40}.ov.on{display:flex}
+.dlg{background:#fff;border-radius:14px;width:480px;max-width:94%;max-height:88vh;overflow:auto;box-shadow:0 24px 60px rgba(0,0,0,.35);animation:pop .25s ease}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1)}}.dlg.gone{animation:fly .4s forwards}@keyframes fly{to{transform:translateY(-40px) scale(.9);opacity:0}}
+.dh{padding:16px 20px;border-bottom:1px solid var(--line);font-size:15px;font-weight:700;display:flex;align-items:center;gap:10px}.dh .x{margin-left:auto;cursor:pointer;color:#94a3b8;font-size:20px}
+.db{padding:18px 20px}.db p{font-size:12.5px;color:var(--muted);line-height:1.5;margin:0 0 10px}
+.step{display:flex;align-items:center;gap:11px;padding:8px 0;font-size:13px;opacity:.4;transition:opacity .3s}.step.on{opacity:1}
+.step .ic{width:20px;display:flex;justify-content:center}.spin{width:15px;height:15px;border:2.5px solid #cbd5e1;border-top-color:var(--brand);border-radius:50%;animation:sp .7s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}.ok{color:var(--emer);font-weight:800}
+.lockbtn{background:var(--emer);color:#fff;font-size:14px;padding:11px 26px;border-radius:9px;display:none;margin:8px auto 0}
+label{font-size:12px;font-weight:600;display:block;margin:12px 0 5px}
+input,select,textarea{width:100%;padding:9px 11px;border:1.5px solid var(--line);border-radius:8px;font-size:13px;font-family:inherit}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}.chip{font-size:11.5px;background:#f1f5f9;border:1px solid var(--line);border-radius:99px;padding:4px 10px;cursor:pointer}.chip:hover{background:#e0f2fe}
+.prev{border:1px solid var(--line);border-radius:9px;padding:10px;margin-top:10px;max-height:220px;overflow:auto}.prow{font-size:12px;padding:6px 0;border-bottom:1px solid #f1f5f9}.prow .loc{font-weight:700;font-size:11px;color:#334155}
+.mf{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0b1220;color:#fff;padding:9px 16px;border-radius:9px;font-size:12.5px;opacity:0;transition:.3s;z-index:60;max-width:70%;text-align:center}.toast.on{opacity:1}
+.ditem .rm{opacity:0;color:#64748b;font-size:13px;padding:0 4px;border-radius:5px;flex-shrink:0}
+.ditem:hover .rm{opacity:1}.ditem .rm:hover{background:#3b1220;color:#fca5a5}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:-4px 0 14px}
+.tab{font-size:12.5px;font-weight:700;padding:8px 12px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent}
+.tab.on{color:var(--brand);border-bottom-color:var(--brand)}
+.tabpane{display:none}.tabpane.on{display:block}
+.cat{margin:12px 0}.cath{font-size:12px;font-weight:800;color:#334155;margin-bottom:3px;text-transform:capitalize}
+.catd{font-size:11px;color:#94a3b8;margin-bottom:5px}
+textarea.mono{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;line-height:1.5;min-height:74px;white-space:pre;overflow:auto}
+.hintbox{font-size:11px;color:#64748b;background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5}
+.hashchip{font-family:ui-monospace,Consolas,monospace;font-size:10px;background:#f1f5f9;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:#475569}
+.hasharrow{font-family:ui-monospace,monospace;font-size:10.5px;color:#334155;margin:4px 0}
+.alertrow{display:flex;gap:10px;align-items:flex-start;border:1px solid #fee2e2;background:#fef2f2;border-radius:9px;padding:9px 11px;margin-bottom:8px}
+.alertrow .an{font-weight:800;font-size:12px;color:#b91c1c}.alertrow .ad{font-size:11.5px;color:#7f1d1d;margin-top:2px;line-height:1.4}
+.alertrow.warn{border-color:#fde68a;background:#fffbeb}.alertrow.warn .an{color:#b45309}.alertrow.warn .ad{color:#92400e}
+.gwrap{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.gbar{display:flex;align-items:center;gap:10px;padding:9px 16px;border-bottom:1px solid var(--line);background:#fff;font-size:12px;color:var(--muted)}
+.gcanvas{flex:1;overflow:auto;background:#0b1220;position:relative}
+.gnode rect{rx:6}.gnode text{font-family:ui-monospace,Consolas,monospace;fill:#e2e8f0}
+.glegend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:#475569;padding:8px 16px;border-top:1px solid var(--line);background:#fff}
+.gdot{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:middle}
+.tabbar{display:flex;gap:2px;margin-left:6px}
+.tabbtn{font-size:12px;font-weight:700;padding:5px 12px;border-radius:7px 7px 0 0;cursor:pointer;color:#64748b;border:1px solid transparent;border-bottom:none}
+.tabbtn.on{color:var(--ink);background:#fff;border-color:var(--line)}
+</style></head><body>
+<div class="side">
+  <div class="brand"><svg width="28" height="28" viewBox="0 0 48 48"><path d="M24 3l16 6v11c0 10-7 17-16 21C15 37 8 30 8 20V9l16-6z" fill="#0ea5e9"/><path d="M24 7l12 4.5V20c0 7.6-5 13-12 16.3C17 33 12 27.6 12 20v-8.5L24 7z" fill="#0b1220"/><text x="24" y="27" font-size="10" font-weight="700" fill="#fff" text-anchor="middle">CAI</text></svg><div><h1>CAI Guard</h1><small>local · open source</small></div></div>
+  <div class="addbtn" onclick="addDoc()">＋ Add a document</div>
+  <div class="addbtn" style="background:#0f1a2e;color:#7dd3fc;border:1px solid #1e3a5f;margin-top:0" onclick="addFolder()">📁 Add a folder</div>
+  <div class="addbtn" style="background:#10241a;color:#6ee7b7;border:1px solid #14532d;margin-top:0" onclick="pushAllDocs()">⏫ Push all pending (all docs)</div>
+  <div class="dgrp">GUARDED DOCUMENTS</div><div class="dlist" id="dlist"></div>
+  <div class="foot" onclick="openSettings()">⚙️ Settings</div>
+</div>
+<div class="main">
+  <div class="top"><h2 id="ttl">CAI Guard</h2><div class="w" id="watch"></div><div class="r" id="topr"></div></div>
+  <div class="body" id="mainbody"><div class="doc"><div class="empty" id="emptymsg">Click <b>＋ Add a document</b> to put a Word file under CAI.<br>It stays a normal Word document — CAI just watches and tracks every change.</div></div></div>
+</div>
+<div class="ov" id="setupov"><div class="dlg" id="setupdlg"></div></div>
+<div class="ov" id="setov"><div class="dlg" id="setdlg" style="width:430px"></div></div>
+<div class="ov" id="aiov"><div class="dlg" id="aibox"></div></div>
+<div class="ov" id="promptov"><div class="dlg" id="promptbox" style="width:450px"></div></div>
+<div class="toast" id="toast"></div>
+<script>
+let CUR=null,addPath=null,previewEdits=[];
+const api=()=>window.pywebview.api;
+const esc=s=>String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(window._t);window._t=setTimeout(()=>t.classList.remove('on'),3200);}
+
+async function refresh(){const docs=await api().list_docs();window.DOCS=docs;
+  document.getElementById('dlist').innerHTML=docs.length?docs.map((d,i)=>`<div class="ditem ${CUR===d.path?'on':''}" onclick="openDocI(${i})"><div class="fi">${d.name.toLowerCase().endsWith('.md')?'M':'W'}</div><div class="meta">${esc(d.name)}<div style="font-size:10px;color:#64748b">🔒 v${d.version}</div></div>${d.pending?`<span class="b">${d.pending}</span>`:''}<span class="rm" title="Unlock &amp; remove from CAI Guard" onclick="event.stopPropagation();removeDocI(${i})">✕</span></div>`).join(''):'<div style="color:#5b6b82;font-size:12px;padding:10px">None yet.</div>';}
+function openDocI(i){const d=(window.DOCS||[])[i];if(d)openDoc(d.path);}
+function removeDocI(i){const d=(window.DOCS||[])[i];if(d)removeDoc(d.path,d.name);}
+async function removeDoc(path,name){
+  if(!confirm('Unlock and remove "'+name+'" from CAI Guard?\n\nThe Word file is NOT deleted — CAI just stops watching it and forgets its baseline.'))return;
+  const r=await api().remove_doc(path);
+  if(r&&r.ok===false){toast('⚠ '+(r.error||'Could not remove'));return;}
+  if(CUR===path){CUR=null;document.getElementById('mainbody').innerHTML='<div class="doc"><div class="empty">Document unlocked and removed. Add another to keep watching.</div></div>';document.getElementById('ttl').textContent='CAI Guard';document.getElementById('watch').innerHTML='';document.getElementById('topr').innerHTML='';}
+  await refresh();toast('🔓 Unlocked and removed.');}
+async function openDoc(path){CUR=path;await refresh();renderDoc(await api().state(path));}
+function renderDoc(st){
+  document.getElementById('ttl').textContent=st.name;
+  document.getElementById('watch').innerHTML='<span class="live"></span> Auto-watching — edit here or in Word';
+  document.getElementById('topr').innerHTML=`<div class="tabbar"><span class="tabbtn on" id="tab-review" onclick="showReview()">Review</span><span class="tabbtn" id="tab-graph" onclick="showGraph()">Graph</span></div><button class="ghost" onclick="openAI()">✨ Ask AI</button><button class="ghost" onclick="restoreLocked()">⟲ Restore to locked</button>`;
+  const docHtml=st.groups.map(g=>`<div class="grp"><div class="grph">${g.region!=='body'?'<span class="rtag">'+g.region+'</span>':''}${esc(g.title)}${g.changed?' <span class="cd" title="changed"></span>':''}<span class="gh">structure <b>${g.sh}</b> · semantic <b>${g.mh}</b></span></div>${g.sections.map(s=>{const cl=(s.level&&s.level!=='none')?('changed '+(s.level==='control-weakened'?'weak':s.level==='structural'?'structural':'')):'';return `<div class="sec ${cl}" data-id="${s.id}"><span class="body2 ${s.heading?'hd':''}" contenteditable spellcheck="false" oninput="dirty('${s.id}')">${esc(s.text)}</span>${(s.level&&s.level!=='none')?'<span class="lvltag">'+s.level+'</span>':''}<button class="push primary" onclick="push('${s.id}')">↑ Push to Word</button></div>`;}).join('')}</div>`).join('');
+  const pend=st.pending.length?st.pending.map(p=>{let d=(p.diffs&&p.diffs.length)?p.diffs.map(x=>`<div class="tok"><b>${x.label}:</b> <span class="del">${esc(x.old)}</span> → <span class="add">${esc(x.new)}</span></div>`).join(''):`<div class="diff"><span class="del">– ${esc((p.base||'').slice(0,90))}</span><br><span class="add">+ ${esc((p.cur||'').slice(0,90))}</span></div>`;return `<div class="chg"><div class="r1"><b>${p.region==='body'?'§ '+p.id.replace('b',''):p.region}</b><span class="badge b-${p.level}">${p.level}</span><span class="who">${p.actor==='program'?'<span class="p">program</span>':'<span class="wd">Word</span>'}</span></div>${d}${p.advisory?'<div class="adv">⚠ AI advisory: '+esc(p.advisory)+'</div>':''}<div class="btns"><button class="emer" onclick="act('approve','${p.id}')">Approve</button><button class="danger" onclick="act('reject','${p.id}')">Reject</button></div></div>`;}).join(''):'<div class="empty" style="padding:40px 16px">✓ No pending changes.<br>Matches the approved baseline.</div>';
+  document.getElementById('mainbody').innerHTML=`<div class="doc"><div class="paper">${docHtml}</div></div><div class="rev"><div class="rev-h">Changes <span class="pill">${st.pending.length} pending</span></div><div class="rev-b">${pend}</div></div>`;
+}
+function dirty(id){document.querySelector(`.sec[data-id="${id}"]`).classList.add('dirty');}
+async function push(id){const t=document.querySelector(`.sec[data-id="${id}"] .body2`).textContent;const r=await api().edit(CUR,id,t);if(r&&r.ok===false){toast('⚠ '+(r.error||'Could not write'));return;}toast('↑ Pushed into the Word document.');openDoc(CUR);}
+async function act(k,id){const r=await api()[k](CUR,id);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast(k==='approve'?'Approved — baseline updated.':'Rejected — restored in the document.');openDoc(CUR);}
+async function restoreLocked(){const r=await api().restore_locked(CUR);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('Restored to the last locked version (byte-exact).');openDoc(CUR);}
+window.onWordSave=function(path,count){refresh();if(!count){if(path===CUR)openDoc(CUR);return;}window._pp=path;
+  document.getElementById('promptbox').innerHTML=`<div class="dh">⌨ You saved changes in Word</div><div class="db"><p>CAI detected <b>${count} change${count>1?'s':''}</b> in <b>${esc(String(path).split(/[\\/]/).pop())}</b>. Route them through CAI review, or push them straight in with no routing.</p><div class="mf"><button class="primary" onclick="promptCheck()">Check changes first</button><button class="ghost" onclick="promptPush()">Push changes</button></div></div>`;
+  document.getElementById('promptov').classList.add('on');};
+function closePrompt(){document.getElementById('promptov').classList.remove('on');}
+async function promptCheck(){closePrompt();openDoc(window._pp);}
+async function promptPush(){closePrompt();const r=await api().push_all(window._pp);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('Pushed '+(r.pushed||0)+' change(s) — no review.');refresh();if(window._pp===CUR)openDoc(window._pp);}
+
+/* ---- Graph tab (dependency map) ---- */
+function showReview(){document.getElementById('tab-graph')?.classList.remove('on');openDoc(CUR);}
+async function showGraph(){if(!CUR)return;const g=await api().graph(CUR);renderGraph(g);}
+function renderGraph(g){
+  document.getElementById('tab-review')?.classList.remove('on');
+  document.getElementById('tab-graph')?.classList.add('on');
+  const mb=document.getElementById('mainbody');
+  if(!g||!g.ok){mb.innerHTML='<div class="doc"><div class="empty">No structural map for this document.<br>'+(g&&g.detail?esc(g.detail):'')+'</div></div>';return;}
+  const adj={}; g.edges.forEach(e=>{(adj[e.source]=adj[e.source]||[]).push(e.target);});
+  const depth={}, root='[package]', q=[[root,0]]; depth[root]=0;
+  while(q.length){const it=q.shift();(adj[it[0]]||[]).forEach(t=>{if(depth[t]===undefined){depth[t]=it[1]+1;q.push([t,it[1]+1]);}});}
+  let maxd=0; g.nodes.forEach(n=>{if(depth[n.id]===undefined)depth[n.id]=(n.kind==='media'?3:2);maxd=Math.max(maxd,depth[n.id]);});
+  const cols={}; g.nodes.forEach(n=>{(cols[depth[n.id]]=cols[depth[n.id]]||[]).push(n);});
+  const COLW=224,NODw=182,NODh=36,VG=13,PADX=28,PADY=22;
+  let maxRows=0; Object.keys(cols).forEach(d=>maxRows=Math.max(maxRows,cols[d].length));
+  const W=PADX*2+(maxd+1)*COLW, H=Math.max(320,PADY*2+maxRows*(NODh+VG));
+  const pos={}; Object.keys(cols).forEach(d=>cols[d].forEach((n,i)=>pos[n.id]={x:PADX+(+d)*COLW,y:PADY+i*(NODh+VG)}));
+  const fillC={ok:'#334155',edited:'#b45309',added:'#15803d',dropped:'#3f1414',unreadable:'#7f1d1d',root:'#0369a1',external:'#334155'};
+  const strokeC={ok:'#475569',edited:'#f59e0b',added:'#22c55e',dropped:'#ef4444',unreadable:'#ef4444',root:'#0ea5e9',external:'#64748b'};
+  const edgesSvg=g.edges.map(e=>{const s=pos[e.source],t=pos[e.target];if(!s||!t)return '';const x1=s.x+NODw,y1=s.y+NODh/2,x2=t.x,y2=t.y+NODh/2,mx=(x1+x2)/2;const col=e.status==='dangling'?'#ef4444':'#475569';const dash=e.status==='dangling'?'stroke-dasharray="4 3"':'';return `<path d="M${x1},${y1} C${mx},${y1} ${mx},${y2} ${x2},${y2}" fill="none" stroke="${col}" stroke-width="1.3" ${dash} opacity=".65"/>`;}).join('');
+  const nodesSvg=g.nodes.map(n=>{const p=pos[n.id];if(!p)return '';const f=fillC[n.status]||'#334155',st=strokeC[n.status]||'#475569',lab=(n.label||n.id);const dash=n.status==='dropped'?'stroke-dasharray="4 3"':'';return `<g class="gnode"><rect x="${p.x}" y="${p.y}" width="${NODw}" height="${NODh}" rx="6" fill="${f}" stroke="${st}" stroke-width="1.5" ${dash}/><text x="${p.x+9}" y="${p.y+15}" font-size="10.5">${esc(lab.slice(0,26))}</text><text x="${p.x+9}" y="${p.y+28}" font-size="8.5" fill="#94a3b8">${esc(n.hash||'')} · ${esc(n.status)}</text></g>`;}).join('');
+  const leg=[['root','package'],['ok','unchanged'],['edited','edited'],['added','added'],['dropped','dropped'],['unreadable','unreadable']].map(x=>`<span><span class="gdot" style="background:${fillC[x[0]]}"></span>${x[1]}</span>`).join('')+`<span><span class="gdot" style="background:#ef4444"></span>broken link</span>`;
+  mb.innerHTML=`<div class="gwrap"><div class="gbar"><b>Dependency map</b> — ${g.counts.parts} parts · ${g.counts.edges} links<span style="margin-left:auto"></span><button class="ghost" onclick="remap()">🔒 Re-map (lock current structure)</button></div><div class="gcanvas"><svg width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg">${edgesSvg}${nodesSvg}</svg></div><div class="glegend">${leg}</div></div>`;
+}
+async function remap(){if(!confirm('Lock the CURRENT structure as the new baseline dependency map?'))return;const r=await api().accept_integrity(CUR);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('🔒 Structure re-mapped and locked.');showGraph();}
+
+/* ---- Corruption alert (named, with Auto-revert / Inspect / Push) ---- */
+window.onIntegrityAlert=function(path,alerts){refresh();window._ip=path;
+  const crit=alerts.filter(a=>a.sev==='critical');
+  const rows=alerts.map(a=>`<div class="alertrow ${a.sev==='warn'?'warn':''}"><div><div class="an">${esc(a.name)}</div><div class="ad">${esc(a.detail)}</div></div></div>`).join('');
+  document.getElementById('promptbox').innerHTML=`<div class="dh">⚠ Possible corruption in ${esc(String(path).split(/[\\/]/).pop())}</div><div class="db"><p>CAI Guard found <b>${crit.length}</b> structural problem${crit.length!==1?'s':''} after this save. Your locked, byte-exact copy is safe.</p>${rows}<div class="mf"><button class="emer" onclick="intRevert()">⟲ Auto-revert to locked</button><button class="ghost" onclick="intInspect()">🗺 Inspect</button><button class="danger" onclick="intPush()">Push (accept anyway)</button></div></div>`;
+  document.getElementById('promptov').classList.add('on');};
+async function intRevert(){closePrompt();const r=await api().restore_locked(window._ip);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('⟲ Reverted to the locked, uncorrupted version.');refresh();if(window._ip===CUR)openDoc(window._ip);}
+async function intInspect(){closePrompt();await openDoc(window._ip);showGraph();}
+async function intPush(){closePrompt();const r=await api().accept_integrity(window._ip);if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('Accepted the new structure as the baseline.');refresh();}
+
+/* bulk push — accept all pending changes across every guarded doc */
+async function pushAllDocs(){
+  const s=await api().scan_pending_all();
+  if(!s.total){toast('Nothing pending across your guarded docs.');return;}
+  document.getElementById('promptbox').innerHTML=`<div class="dh">⏫ Push all pending changes</div><div class="db"><p><b>${s.changed}</b> of ${s.docs} guarded document${s.docs>1?'s':''} have pending changes — <b>${s.total}</b> change${s.total>1?'s':''} total. Pushing accepts them all into each document's baseline in one pass. Files aren’t altered; this just re-locks them to their current state.</p><div class="mf"><button class="ghost" onclick="closePrompt()">Cancel</button><button class="emer" onclick="runPushAll()">Push all ${s.total} change(s)</button></div></div>`;
+  document.getElementById('promptov').classList.add('on');
+}
+async function runPushAll(){
+  document.getElementById('promptbox').innerHTML=`<div class="dh">⏫ Pushing…</div><div class="db"><p>Accepting pending changes across all documents.</p><div style="text-align:center;padding:12px"><span class="spin"></span></div></div>`;
+  const r=await api().push_all_docs();closePrompt();
+  if(r&&r.ok===false){toast('⚠ '+(r.error||'Push failed'));return;}
+  await refresh();if(CUR)openDoc(CUR);
+  toast(`⏫ Pushed ${r.pushed} change(s) across ${r.changed} doc(s)`+(r.failed?` · ${r.failed} failed`:''));
+}
+
+/* add a whole folder — CAI-lock every doc inside */
+async function addFolder(){
+  const folder=await api().pick_folder(); if(!folder)return;
+  const scan=await api().scan_folder(folder,true);
+  const n=scan.count||0;
+  if(!n){toast('No new .docx/.md files to lock in that folder.');return;}
+  const name=String(folder).split(/[\\/]/).pop()||folder;
+  const list=(scan.sample||[]).map(s=>'<div class="prow">'+esc(s)+'</div>').join('')+(n>scan.sample.length?`<div class="prow" style="color:#94a3b8">…and ${n-scan.sample.length} more</div>`:'');
+  document.getElementById('promptbox').innerHTML=`<div class="dh">📁 Lock every document in “${esc(name)}”</div><div class="db"><p>Found <b>${n}</b> document${n>1?'s':''} not yet guarded. CAI will lock each one (baseline + byte vault). Files aren’t changed.</p><div class="prev">${list}</div><div class="mf"><button class="ghost" onclick="closePrompt()">Cancel</button><button class="primary" onclick='runFolder(${JSON.stringify(folder)})'>Lock ${n} document${n>1?'s':''}</button></div></div>`;
+  document.getElementById('promptov').classList.add('on');
+}
+async function runFolder(folder){
+  document.getElementById('promptbox').innerHTML=`<div class="dh">📁 Locking folder…</div><div class="db"><p>Digesting and locking every document — this can take a moment for large folders.</p><div style="text-align:center;padding:12px"><span class="spin"></span></div></div>`;
+  const r=await api().enroll_folder(folder,true);
+  closePrompt();
+  if(r&&r.ok===false){toast('⚠ '+(r.error||'Folder lock failed'));return;}
+  await refresh();
+  toast(`🔒 Locked ${r.added} document(s)`+(r.skipped?` · ${r.skipped} already guarded`:'')+(r.failed?` · ${r.failed} failed`:''));
+}
+
+/* one-click add + setup */
+const STEPS=["Reading the document","Extracting sections by heading","Reading headers & footers","Computing structure hashes","Computing semantic hashes","Byte-exact vault copy","Locking baseline"];
+async function addDoc(){const path=await api().pick_document();if(!path)return;addPath=path;
+  const dlg=document.getElementById('setupdlg');dlg.className='dlg';
+  dlg.innerHTML=`<div class="dh"><svg width="22" height="22" viewBox="0 0 48 48"><path d="M24 3l16 6v11c0 10-7 17-16 21C15 37 8 30 8 20V9l16-6z" fill="#0ea5e9"/></svg> Putting this document under CAI</div><div class="db"><div style="font-size:12.5px;color:#64748b;margin-bottom:8px">${esc(String(path).split(/[\\/]/).pop())}</div><div id="steps">${STEPS.map(s=>`<div class="step"><span class="ic"><span class="spin"></span></span>${s}</div>`).join('')}</div><button class="lockbtn" id="lockbtn" onclick="doLock()">🔒 Lock document</button></div>`;
+  document.getElementById('setupov').classList.add('on');
+  const enrollP=api().enroll(path);const els=document.querySelectorAll('#steps .step');let i=0;
+  (function run(){if(i<els.length){els[i].classList.add('on');setTimeout(()=>{els[i].querySelector('.ic').innerHTML='<span class="ok">✓</span>';i++;setTimeout(run,110);},380);}else{enrollP.then(r=>{if(r&&r.ok===false){toast('⚠ '+r.error);document.getElementById('setupov').classList.remove('on');}else{document.getElementById('lockbtn').style.display='block';}});}})();
+}
+function doLock(){const dlg=document.getElementById('setupdlg');dlg.classList.add('gone');setTimeout(async()=>{document.getElementById('setupov').classList.remove('on');const em=document.getElementById('emptymsg');if(em)em.style.display='none';await refresh();openDoc(addPath);toast('🔒 Locked and guarded.');},420);}
+
+/* Ask AI — conversational; proposes edits tied to each section's hashes before applying */
+function openAI(){document.getElementById('aibox').innerHTML=`<div class="dh">✨ Ask AI<span class="x" onclick="closeAI()">×</span></div><div class="db"><p>Ask anything, or describe a change. It chats normally and, when you want edits, proposes them tied to each section's hash — you confirm before anything is written, and confirmed edits still go through review.</p>
+  <textarea id="aitext" rows="2" placeholder="e.g. What are the risky clauses here?  ·  Shorten payment to 15 days  ·  Soften mandates to should"></textarea>
+  <div class="chips"><span class="chip" onclick="fillAI('Summarize what this document commits me to')">Summarize obligations</span><span class="chip" onclick="fillAI('Shorten payment terms to 15 days')">Payment → 15 days</span><span class="chip" onclick="fillAI('Soften mandates to should')">Soften</span></div>
+  <div id="aiprev"></div><div class="mf"><button class="ghost" onclick="closeAI()">Close</button><button class="primary" onclick="aiSend()">Send</button></div></div>`;
+  document.getElementById('aiov').classList.add('on');setTimeout(()=>document.getElementById('aitext').focus(),40);
+  document.getElementById('aitext').addEventListener('keydown',ev=>{if(ev.key==='Enter'&&(ev.metaKey||ev.ctrlKey)){aiSend();}});}
+function closeAI(){document.getElementById('aiov').classList.remove('on');}
+function fillAI(t){document.getElementById('aitext').value=t;aiSend();}
+function clearAIprev(){document.getElementById('aiprev').innerHTML='';previewEdits=[];}
+async function aiSend(){const msg=document.getElementById('aitext').value.trim();if(!msg)return;const pv=document.getElementById('aiprev');pv.innerHTML='<div class="prev" style="color:#64748b;font-size:12.5px">Thinking…</div>';
+  const r=await api().ai_preview(CUR,msg);previewEdits=r.edits||[];let html='';
+  if(r.reply)html+=`<div class="prev" style="white-space:pre-wrap;font-size:12.5px;line-height:1.5">${esc(r.reply)}</div>`;
+  if(previewEdits.length){html+=`<div style="font-size:12px;font-weight:700;margin:10px 0 4px">${previewEdits.length} proposed edit(s) — each bound to its hashed section:</div><div class="prev">${previewEdits.map(e=>`<div class="prow"><div class="loc">§ ${esc(e.id)} · ${e.level}</div><span class="del">– ${esc(e.old.slice(0,80))}</span><br><span class="add">+ ${esc(e.new.slice(0,80))}</span><div class="hasharrow">content <span class="hashchip">${e.old_content_hash}</span> → <span class="hashchip">${e.new_content_hash}</span> &nbsp;·&nbsp; semantic <span class="hashchip">${e.old_semantic_hash}</span> → <span class="hashchip">${e.new_semantic_hash}</span></div></div>`).join('')}</div><div class="mf"><button class="ghost" onclick="clearAIprev()">Discard edits</button><button class="emer" onclick="aiConfirm()">Apply ${previewEdits.length} edit(s) →</button></div>`;}
+  pv.innerHTML=html;document.getElementById('aitext').value='';}
+async function aiConfirm(){const r=await api().ai_apply(CUR,previewEdits);closeAI();if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));}else{toast('✨ Applied '+r.applied+' edit(s) — pending your review.');}openDoc(CUR);}
+
+/* settings — General · Semantic Library · Lexicon */
+const CATINFO={modals:"Obligation/permission words. Format per line: TERM | rank | meaning (rank 3=strong, 2=middle, 1=weak).",
+  negation:"Negation/prohibition words. Format: TERM | meaning.",
+  frequency:"Frequency & scope words (always, never, all, no…). Format: TERM | meaning.",
+  conditions:"Condition/exception words (except, unless, provided, notwithstanding…). Format: TERM | meaning.",
+  stance:"Stance/claim verbs (realize, admit, believe…). Format: TERM | meaning.",
+  roles:"Named parties/actors. Format: TERM | meaning."};
+function modalsToText(m){return Object.keys(m).map(k=>{const v=m[k]||{};return k+' | '+(v.rank!=null?v.rank:2)+' | '+(v.meaning||'');}).join('\n');}
+function tmToText(o){return Object.keys(o).map(k=>k+' | '+(typeof o[k]==='string'?o[k]:'')).join('\n');}
+function lexToText(a){return (a||[]).map(x=>x.term+' | '+(x.meaning||'')).join('\n');}
+function parseModals(t){const o={};t.split('\n').forEach(l=>{l=l.trim();if(!l)return;const p=l.split('|').map(x=>x.trim());const term=p[0].toUpperCase();if(!term)return;o[term]={rank:parseInt(p[1])||2,meaning:p.slice(2).join(' | ')};});return o;}
+function parseTM(t){const o={};t.split('\n').forEach(l=>{l=l.trim();if(!l)return;const p=l.split('|').map(x=>x.trim());const term=p[0].toUpperCase();if(!term)return;o[term]=p.slice(1).join(' | ');});return o;}
+function parseLex(t){const a=[];t.split('\n').forEach(l=>{l=l.trim();if(!l)return;const p=l.split('|').map(x=>x.trim());if(!p[0])return;a.push({term:p[0],meaning:p.slice(1).join(' | ')});});return a;}
+
+async function openSettings(){
+  const s=await api().get_settings(), v=await api().get_vocab(), lex=await api().get_lexicon();
+  const dlg=document.getElementById('setdlg');dlg.style.width='580px';
+  const catBoxes=Object.keys(CATINFO).map(k=>`<div class="cat"><div class="cath">${k}</div><div class="catd">${CATINFO[k]}</div><textarea class="mono" id="voc_${k}">${esc(k==='modals'?modalsToText(v.modals||{}):tmToText(v[k]||{}))}</textarea></div>`).join('');
+  dlg.innerHTML=`<div class="dh">⚙️ Settings<span class="x" onclick="closeSettings()">×</span></div><div class="db">
+    <div class="tabs"><span class="tab on" onclick="setTab('gen',this)">General</span><span class="tab" onclick="setTab('lib',this)">Semantic Library</span><span class="tab" onclick="setTab('lex',this)">Lexicon</span></div>
+
+    <div class="tabpane on" id="tab_gen">
+      <label>AI provider (optional)</label><select id="prov"><option ${s.ai_provider.includes('Anthropic')?'selected':''}>Anthropic (Claude)</option><option ${s.ai_provider.includes('OpenAI')?'selected':''}>OpenAI</option><option ${s.ai_provider.includes('Ollama')?'selected':''}>Local model (Ollama)</option><option ${s.ai_provider.includes('None')?'selected':''}>None</option></select>
+      <label>API key</label><input id="key" type="password" value="${esc(s.ai_key||'')}" placeholder="sk-...">
+      <div class="hintbox">Stored locally only. Detection is fully deterministic and needs no key. You can pre-seed this by setting the <b>CAIGUARD_API_KEY</b> (or <b>ANTHROPIC_API_KEY</b>) environment variable — it auto-fills here until you save your own.</div>
+      <label style="display:flex;justify-content:space-between;align-items:center">Start with Windows <input type="checkbox" id="autostart" ${s.autostart?'checked':''} style="width:auto"></label>
+      <div class="mf"><button class="ghost" onclick="closeSettings()">Close</button><button class="primary" onclick="saveGeneral()">Save</button></div>
+    </div>
+
+    <div class="tabpane" id="tab_lib">
+      <div class="hintbox">These are the words CAI treats as <b>meaning-bearing</b>. Editing a meaning is documentation; adding or removing a term changes what gets caught. One entry per line.</div>
+      ${catBoxes}
+      <div class="mf"><button class="danger" onclick="resetLib()">Reset to defaults</button><button class="primary" onclick="saveLibrary()">Save library</button></div>
+    </div>
+
+    <div class="tabpane" id="tab_lex">
+      <div class="hintbox"><b>Lexicon</b> = your own locked terms. Any word you list here is treated as meaning-bearing, so if it's swapped for another word — even one that isn't "semantic" by the built-in rules — the change is caught. Format per line: <b>TERM | what it means / why it's locked</b>.</div>
+      <textarea class="mono" id="lexbox" style="min-height:150px">${esc(lexToText(lex))}</textarea>
+      <div class="mf"><button class="ghost" onclick="closeSettings()">Close</button><button class="primary" onclick="saveLexicon()">Save lexicon</button></div>
+    </div>
+  </div>`;
+  document.getElementById('setov').classList.add('on');}
+function setTab(id,el){document.querySelectorAll('#setdlg .tab').forEach(t=>t.classList.remove('on'));el.classList.add('on');document.querySelectorAll('#setdlg .tabpane').forEach(p=>p.classList.remove('on'));document.getElementById('tab_'+id).classList.add('on');}
+function closeSettings(){document.getElementById('setov').classList.remove('on');}
+async function saveGeneral(){await api().save_settings({ai_provider:document.getElementById('prov').value,ai_key:document.getElementById('key').value,autostart:document.getElementById('autostart').checked});closeSettings();toast('Settings saved.');}
+async function saveLibrary(){const v={modals:parseModals(document.getElementById('voc_modals').value)};['negation','frequency','conditions','stance','roles'].forEach(k=>v[k]=parseTM(document.getElementById('voc_'+k).value));const r=await api().save_vocab(v);if(r&&r.ok===false){toast('⚠ '+(r.error||'Save failed'));return;}toast('Semantic library saved — re-scanning uses it now.');if(CUR)openDoc(CUR);}
+async function resetLib(){if(!confirm('Reset the semantic library to the built-in defaults?'))return;const r=await api().reset_vocab();if(r&&r.ok===false){toast('⚠ '+(r.error||'Failed'));return;}toast('Library reset to defaults.');openSettings();}
+async function saveLexicon(){const items=parseLex(document.getElementById('lexbox').value);const r=await api().save_lexicon(items);if(r&&r.ok===false){toast('⚠ '+(r.error||'Save failed'));return;}toast('Lexicon saved — '+items.length+' locked term(s).');if(CUR)openDoc(CUR);}
+
+window.addEventListener('pywebviewready',refresh);setTimeout(()=>{if(window.pywebview)refresh();},400);
+</script></body></html>

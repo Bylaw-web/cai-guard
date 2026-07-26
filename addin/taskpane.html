@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAI Guard</title>
+  <script src="https://appsforoffice.microsoft.com/lib/1/hosted/office.js"></script>
+  <style>
+    :root{--sky:#0ea5e9;--ink:#0b1220;--muted:#64748b;--line:#e5e9f0;--bg:#f8fafc;
+          --amber:#d97706;--red:#dc2626;--green:#16a34a;--slate:#475569}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;color:var(--ink);background:#fff;font-size:14px}
+    header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+    header img{width:28px;height:28px}
+    header .t{font-weight:700;font-size:15px}
+    header .s{font-size:12px;color:var(--muted)}
+    .wrap{padding:14px 16px}
+    .status{display:flex;align-items:center;gap:10px;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg)}
+    .dot{width:10px;height:10px;border-radius:50%;flex:none}
+    .on .dot{background:var(--green)} .off .dot{background:var(--slate)} .warn .dot{background:var(--amber)} .bad .dot{background:var(--red)}
+    .status.bad{border-color:#fecaca;background:#fef2f2}
+    .corrupt{margin-top:12px}
+    .crow{border:1px solid #fee2e2;background:#fef2f2;border-radius:9px;padding:9px 11px;margin-bottom:7px}
+    .crow .cn{font-weight:800;font-size:12px;color:#b91c1c}.crow .cd{font-size:11px;color:#7f1d1d;margin-top:2px;line-height:1.4}
+    .crow-note{font-size:11.5px;color:#7f1d1d;margin:2px 0 8px}
+    .status .msg{font-weight:600}
+    .status .sub{font-size:12px;color:var(--muted);margin-top:2px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+    .card{border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+    .card .n{font-size:22px;font-weight:700;line-height:1}
+    .card .l{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.03em}
+    .card.red .n{color:var(--red)} .card.amber .n{color:var(--amber)}
+    h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:18px 0 8px}
+    .item{padding:8px 10px;border:1px solid var(--line);border-radius:8px;margin-bottom:6px}
+    .item .tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 6px;border-radius:5px;margin-right:6px;text-transform:uppercase}
+    .tag.control-weakened{background:#fef2f2;color:var(--red)} .tag.semantic{background:#fff7ed;color:var(--amber)}
+    .tag.structural{background:#eff6ff;color:#2563eb} .tag.cosmetic{background:#f1f5f9;color:var(--slate)}
+    .item .txt{font-size:12px;color:#334155;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .foot{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12px;color:var(--muted)}
+    a.btn{color:var(--sky);text-decoration:none;font-weight:600}
+    .empty{color:var(--muted);font-size:13px;padding:8px 0}
+  </style>
+</head>
+<body>
+  <header>
+    <img id="hicon" src="assets/shield-64.png" alt="" />
+    <div>
+      <div class="t">CAI Guard</div>
+      <div class="s" id="docname">—</div>
+    </div>
+  </header>
+  <div class="wrap">
+    <div id="status" class="status off"><span class="dot"></span>
+      <div><div class="msg" id="smsg">Checking…</div><div class="sub" id="ssub">Contacting the local CAI Guard service.</div></div>
+    </div>
+
+    <div class="grid" id="grid" style="display:none">
+      <div class="card red"><div class="n" id="c-weak">0</div><div class="l">Weakened</div></div>
+      <div class="card amber"><div class="n" id="c-sem">0</div><div class="l">Semantic</div></div>
+      <div class="card"><div class="n" id="c-struct">0</div><div class="l">Structural</div></div>
+      <div class="card"><div class="n" id="c-cos">0</div><div class="l">Cosmetic</div></div>
+    </div>
+
+    <div id="corrupt" class="corrupt" style="display:none">
+      <h3>Structural problems</h3>
+      <div class="crow-note">Your locked, byte-exact copy is safe. Open CAI Guard to revert or inspect.</div>
+      <div id="clist"></div>
+    </div>
+
+    <div id="list-wrap" style="display:none">
+      <h3>Pending changes</h3>
+      <div id="list"></div>
+    </div>
+
+    <div class="foot">
+      <span id="ver">—</span>
+      <a class="btn" href="http://127.0.0.1:4620/" target="_blank" rel="noopener">Open full app ↗</a>
+    </div>
+  </div>
+
+  <script src="taskpane.js"></script>
+</body>
+</html>

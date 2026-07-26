@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OfficeApp
+  xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
+  xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+  xsi:type="TaskPaneApp">
+
+  <Id>6f3a1c8e-2b47-4d51-9c2a-ca19d0a17b01</Id>
+  <Version>0.1.0</Version>
+  <ProviderName>CAI Guard</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="CAI Guard" />
+  <Description DefaultValue="Shows whether CAI Guard is watching this document and its live change stats (pending edits, weakened controls, version)." />
+  <IconUrl DefaultValue="http://127.0.0.1:4620/assets/shield-32.png" />
+  <HighResolutionIconUrl DefaultValue="http://127.0.0.1:4620/assets/shield-80.png" />
+  <SupportUrl DefaultValue="http://127.0.0.1:4620/" />
+
+  <Hosts>
+    <Host Name="Document" />
+  </Hosts>
+
+  <DefaultSettings>
+    <SourceLocation DefaultValue="http://127.0.0.1:4620/taskpane.html" />
+  </DefaultSettings>
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <Hosts>
+      <Host xsi:type="Document">
+        <DesktopFormFactor>
+          <GetStarted>
+            <Title resid="app.title" />
+            <Description resid="app.desc" />
+          </GetStarted>
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <OfficeTab id="TabHome">
+              <Group id="cai.group">
+                <Label resid="group.label" />
+                <Icon>
+                  <bt:Image size="16" resid="icon16" />
+                  <bt:Image size="32" resid="icon32" />
+                  <bt:Image size="80" resid="icon80" />
+                </Icon>
+                <Control xsi:type="Button" id="cai.open">
+                  <Label resid="btn.label" />
+                  <Supertip>
+                    <Title resid="btn.label" />
+                    <Description resid="btn.tip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="icon16" />
+                    <bt:Image size="32" resid="icon32" />
+                    <bt:Image size="80" resid="icon80" />
+                  </Icon>
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>cai.taskpane</TaskpaneId>
+                    <SourceLocation resid="taskpane.url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+
+    <Resources>
+      <bt:Images>
+        <bt:Image id="icon16" DefaultValue="http://127.0.0.1:4620/assets/shield-16.png" />
+        <bt:Image id="icon32" DefaultValue="http://127.0.0.1:4620/assets/shield-32.png" />
+        <bt:Image id="icon80" DefaultValue="http://127.0.0.1:4620/assets/shield-80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="taskpane.url" DefaultValue="http://127.0.0.1:4620/taskpane.html" />
+      </bt:Urls>
+      <bt:ShortStrings>
+        <bt:String id="app.title" DefaultValue="CAI Guard" />
+        <bt:String id="group.label" DefaultValue="CAI Guard" />
+        <bt:String id="btn.label" DefaultValue="CAI Guard" />
+      </bt:ShortStrings>
+      <bt:LongStrings>
+        <bt:String id="app.desc" DefaultValue="Open the CAI Guard panel to see whether this document is protected and what has changed." />
+        <bt:String id="btn.tip" DefaultValue="Show CAI Guard status and live change stats for this document." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+</OfficeApp>
