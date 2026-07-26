@@ -17,7 +17,9 @@ with one-click rollback of anything that slips through. 100% local. No cloud. No
 
 ![CAI Guard catching an AI silently weakening a contract](docs/demo.gif)
 
-*An AI edits a contract — softening a `MUST` to `may`, halving a `$2,000,000` cap, slipping in an "except…" — and CAI Guard flags each one as **control-weakened** / **semantic** for your approval. <!--VIDEO-->*
+*An AI edits a contract — softening a `MUST` to `may`, halving a `$2,000,000` cap, slipping in an "except…" — and CAI Guard flags each one as **control-weakened** / **semantic** for your approval.*
+
+**▶ [Watch the full 60-second demo](docs/cai-guard-demo.mp4)**
 
 </div>
 
