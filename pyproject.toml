@@ -25,10 +25,10 @@ dependencies = ["python-docx>=1.1.0"]
 app = ["watchdog>=3.0.0", "flask>=3.0.0", "pywebview>=5.0", "pystray>=0.19.5", "Pillow>=10.0.0"]
 
 [project.urls]
-Homepage = "https://github.com/<your-username>/cai-guard"
-Repository = "https://github.com/<your-username>/cai-guard"
-Issues = "https://github.com/<your-username>/cai-guard/issues"
-Changelog = "https://github.com/<your-username>/cai-guard/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Bylaw-web/cai-guard"
+Repository = "https://github.com/Bylaw-web/cai-guard"
+Issues = "https://github.com/Bylaw-web/cai-guard/issues"
+Changelog = "https://github.com/Bylaw-web/cai-guard/blob/main/CHANGELOG.md"
 
 [project.scripts]
 caiguard = "caiguard.cli:main"

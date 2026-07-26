@@ -25,4 +25,4 @@ First public release.
 - Baselines and vaults are stored in the OS app-data folder, never next to your documents.
 - The engine and integrity guard are fully offline; only the optional AI assistant makes network calls.
 
-[0.1.0]: https://github.com/<your-username>/cai-guard/releases/tag/v0.1.0
+[0.1.0]: https://github.com/Bylaw-web/cai-guard/releases/tag/v0.1.0

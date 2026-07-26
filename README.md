@@ -72,7 +72,7 @@ into a compositional Merkle rollup, to catch corruption that text-diffing can't 
 the desktop tray app and Word add-in are Windows-first via `pywebview`/`pystray`).
 
 ```bash
-git clone https://github.com/<your-username>/cai-guard.git
+git clone https://github.com/Bylaw-web/cai-guard.git
 cd cai-guard
 pip install -r requirements.txt
 pip install -e .

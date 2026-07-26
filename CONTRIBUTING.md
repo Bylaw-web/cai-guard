@@ -13,7 +13,7 @@ bug reports, docs, tests, recognizers for new file types, and UI polish especial
 ## Dev setup
 
 ```bash
-git clone https://github.com/<your-username>/cai-guard.git
+git clone https://github.com/Bylaw-web/cai-guard.git
 cd cai-guard
 python -m venv .venv && . .venv/Scripts/activate   # or source .venv/bin/activate
 pip install -r requirements.txt
@@ -39,7 +39,7 @@ change classification behavior; the roundtrip test exercises enroll → edit →
 
 ## Good first issues
 
-Look for the [`good first issue`](https://github.com/<your-username>/cai-guard/labels/good%20first%20issue)
+Look for the [`good first issue`](https://github.com/Bylaw-web/cai-guard/labels/good%20first%20issue)
 label. Some starters:
 
 - Add words to the default Semantic Library (e.g. more obligation or condition phrases).
