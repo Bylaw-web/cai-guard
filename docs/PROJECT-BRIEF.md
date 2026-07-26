@@ -2,8 +2,9 @@
 
 ## One line
 
-A local change-firewall for documents: lock a baseline, and every future edit is classified and
-held for your approval — catching silently weakened clauses and corrupted files before they ship.
+Stop AI from silently breaking your documents: lock a baseline, and every edit an AI (or anyone)
+makes is classified and held for your approval, with one-click rollback — catching weakened clauses,
+dropped parts, and corrupted files before they ship.
 
 ## The problem
 

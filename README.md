@@ -4,8 +4,9 @@
 
 # CAI Guard
 
-**A local change-firewall for your documents.** Lock a baseline, and every future edit — yours,
-a coworker's, or an AI's — is classified and held for your **approve / reject**. No cloud. No account. Your files never leave your machine.
+**Stop AI from silently breaking your documents.** Lock a byte-exact baseline, and every edit —
+from an AI assistant, a coworker, or you — is classified, flagged, and held for your **approve / reject**,
+with one-click rollback of anything that slips through. 100% local. No cloud. No account.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
@@ -23,15 +24,33 @@ a coworker's, or an AI's — is classified and held for your **approve / reject*
 
 ## Why CAI Guard
 
-You lock a contract, a resume, a policy, a spec. Weeks later something is subtly different — a
-`MUST` softened to `may`, a `$2,000,000` cap quietly halved, a clause with a new "except…", a
-comment silently dropped, or a file that Word now calls "corrupted." Whether it was you at 2 a.m.,
-a collaborator, or an AI assistant, you never got to say yes.
+AI assistants now edit the documents that matter — contracts, policies, resumes, specs — and they
+break them in ways you don't see: a `MUST` softened to `may`, a `$2,000,000` cap quietly halved, a
+new "except…" slipped into a clause, a comment or tracked-change dropped on re-save, or a `.docx`
+rebuilt from text that opens "corrupted." A coworker, or you at 2 a.m., can do the same. Either way,
+you never got to say yes.
 
-CAI Guard sits beside your documents and gives you that yes. It takes a **byte-exact baseline**,
-then classifies every later change deterministically — **cosmetic**, **structural**, **semantic**,
-or **control-weakened** — and surfaces it for review. Nothing is trusted to a language model, and
-nothing is sent anywhere.
+CAI Guard gives you that yes. It locks a **byte-exact baseline**, then classifies every later change
+deterministically — **cosmetic**, **structural**, **semantic**, or **control-weakened** — and holds
+it for your review, with one-click rollback. Nothing is trusted to a language model, and nothing is
+sent anywhere.
+
+## How it stops AI from breaking your documents
+
+AI editors fail in specific, repeatable ways. CAI Guard has a direct defense for each:
+
+| When an AI… | CAI Guard… |
+|---|---|
+| **silently weakens a clause** — `MUST → may`, a changed number/date, a new "except…" | flags it **semantic** or **control-weakened** and holds it for approval — it's never folded in silently |
+| **drops comments, footnotes, or tracked changes** on re-save | raises a **dropped-part** alert and offers one-click revert |
+| **breaks an image or hyperlink** (a dangling relationship) | raises a **broken-relationship** alert *before* the file "won't open" |
+| **writes malformed XML or truncates the file** | raises an **unreadable-part** alert and restores the byte-exact copy |
+| **rebuilds the doc from plain text**, losing all formatting | catches it as **structure-gutted** even when the words still match, via a separate structural fingerprint |
+| **lands an edit on the wrong paragraph** (the doc changed since it read it) | **refuses** — every edit is bound to its section's hash |
+
+And CAI Guard's own optional AI assistant can't break anything either: it only **proposes** edits
+(each bound to a section's hash) that you confirm, and writes them **in place** — never the full-file
+"rebuild from text" that corrupts documents. Whatever slips through is one click from a **byte-exact restore**.
 
 ## Highlights
 
